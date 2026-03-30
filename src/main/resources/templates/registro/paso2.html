@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Paso 2 - Datos personales | Registro</title>
+</head>
+<body>
+<main>
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+
+            <!-- Cabecera -->
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Registro de usuario</h2>
+                <p class="text-muted">Paso 2 de 2 — Datos personales y tipos de usuario</p>
+            </div>
+
+            <!-- Indicador de pasos -->
+            <div class="d-flex justify-content-center mb-4">
+                <div class="d-flex align-items-center">
+                    <span class="badge rounded-pill bg-secondary px-3 py-2 fs-6">1</span>
+                    <span class="ms-2 text-muted">Verificar documento</span>
+                    <span class="mx-3 text-muted">&#8594;</span>
+                    <span class="badge rounded-pill bg-primary px-3 py-2 fs-6">2</span>
+                    <span class="ms-2 fw-semibold">Datos personales</span>
+                </div>
+            </div>
+
+            <!-- Alerta de error de registro -->
+            <div th:if="${errorRegistro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> <span th:text="${errorRegistro}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+
+            <!-- Formulario paso 2 -->
+            <div class="card">
+                <div class="card-body p-4">
+                    <form th:action="@{/registro}" th:object="${datosDto}" method="post">
+
+                        <!-- Campos hidden con los datos del paso 1 -->
+                        <input type="hidden" th:field="*{documento}"/>
+                        <input type="hidden" th:field="*{tipoDocumento}"/>
+                        <input type="hidden" th:field="*{centroId}"/>
+
+                        <!-- Fila: Nombre y Apellidos -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="nombre" class="form-label fw-semibold">
+                                    Nombre <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="nombre" th:field="*{nombre}"
+                                       class="form-control"
+                                       placeholder="Nombre"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'"/>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}"
+                                     th:errors="*{nombre}"></div>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="apellidos" class="form-label fw-semibold">
+                                    Apellidos <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="apellidos" th:field="*{apellidos}"
+                                       class="form-control"
+                                       placeholder="Primer apellido Segundo apellido"
+                                       th:classappend="${#fields.hasErrors('apellidos')} ? 'is-invalid'"/>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
+                                     th:errors="*{apellidos}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">
+                                Email <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" id="email" th:field="*{email}"
+                                   class="form-control"
+                                   placeholder="nombre@ejemplo.com"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"/>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}"
+                                 th:errors="*{email}"></div>
+                            <div class="form-text">El email se usará como nombre de usuario para acceder.</div>
+                        </div>
+
+                        <!-- Contraseña -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="password" class="form-label fw-semibold">
+                                    Contraseña <span class="text-danger">*</span>
+                                </label>
+                                <input type="password" id="password" th:field="*{password}"
+                                       class="form-control"
+                                       placeholder="Contraseña"
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"/>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}"
+                                     th:errors="*{password}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="passwordConfirm" class="form-label fw-semibold">
+                                    Confirmar contraseña <span class="text-danger">*</span>
+                                </label>
+                                <input type="password" id="passwordConfirm" th:field="*{passwordConfirm}"
+                                       class="form-control"
+                                       placeholder="Repita la contraseña"
+                                       th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'is-invalid'"/>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('passwordConfirm')}"
+                                     th:errors="*{passwordConfirm}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Separador -->
+                        <hr class="my-4"/>
+
+                        <!-- Tipos de usuario -->
+                        <div class="mb-4">
+                            <h5 class="fw-semibold mb-3">Tipos de usuario</h5>
+
+                            <!-- Alerta del lookup -->
+                            <div th:if="${lookup}"
+                                 class="alert"
+                                 th:classappend="'alert-' + ${lookup.tipoAlerta()}"
+                                 role="alert">
+                                <span th:text="${lookup.mensaje()}"></span>
+                            </div>
+
+                            <!-- Checkboxes de tipos de usuario -->
+                            <div class="row g-2">
+                                <div class="col-md-6" th:each="tipo : ${tiposUsuario}">
+                                    <div class="form-check form-check-inline w-100 border rounded p-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="tiposUsuario"
+                                               th:value="${tipo.code}"
+                                               th:id="'tipo_' + ${tipo.code}"
+                                               th:checked="${(datosDto.tiposUsuario != null and datosDto.tiposUsuario.contains(tipo.code))
+                                                            or (datosDto.tiposUsuario == null and lookup != null
+                                                                and lookup.tiposPreseleccionados() != null
+                                                                and lookup.tiposPreseleccionados().contains(tipo.code))}"/>
+                                        <label class="form-check-label ms-1 user-select-none"
+                                               th:for="'tipo_' + ${tipo.code}"
+                                               th:text="${tipo.name}">Tipo</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/registro}" class="btn btn-outline-secondary">
+                                &larr; Volver al paso 1
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Completar registro
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Registro completado | Secretaria Virtual</title>
+</head>
+<body>
+<main>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 text-center">
+
+            <div class="mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor"
+                     class="text-success mb-3" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                </svg>
+                <h2 class="fw-bold">¡Registro completado!</h2>
+                <p class="text-muted fs-5">
+                    Tu cuenta ha sido creada correctamente.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-4">
+                    <p class="mb-3">
+                        Ya puedes acceder a la <strong>Secretaria Virtual</strong> con el email
+                        y la contraseña que has indicado.
+                    </p>
+                    <p class="text-muted small">
+                        Si tienes algún problema para acceder, contacta con la secretaría del centro.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a th:href="${secretariaVirtualUrl}" class="btn btn-primary">
+                    Ir a la Secretaria Virtual
+                </a>
+            </div>
+
+        </div>
+    </div>
+</main>
+</body>
+</html>
