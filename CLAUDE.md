@@ -29,6 +29,11 @@ La aplicación consiste en un registro de usuarios en dos pasos: primero se veri
 - **Group ID:** `com.fpmislata`
 - **Versión de Java:** 21
 
+## Convenciones de código
+
+- En la capa de dominio (`domain/`), usar anotaciones Jakarta en lugar de las específicas de Spring: `@Inject` en vez de `@Autowired`, `@Named` en vez de `@Component`/`@Service`. Objetivo: mantener la capa de dominio independiente del framework.
+- En `controller/` y `persistence/`, usar las anotaciones de Spring normalmente (`@Service`, `@Repository`, `@Controller`, etc.).
+
 ## Arquitectura
 
 Arquitectura en capas — dirección de dependencia estricta: `controller → domain → persistence`.
